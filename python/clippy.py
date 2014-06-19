@@ -8,22 +8,37 @@ import struct
 MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 9292
 
+class Msg():
+	def __init__(self,msg):
+		self._value = msg
+
+	def change(self,msg):
+		self._value = msg
+
+	def value(self):
+		return self._value
 
 
 class ClippyWatcher(threading.Thread):
-	def __init__(self):
-		super(ClippyWatcher, self).__init__()
+	def __init__(self,msg):
+		super(ClippyWatcher,self).__init__()
 		self._pause = 5
 		self._stopping = False
-
-	def run(self):       
+		self._msg = msg
+	
+	def run(self,):       
 		recent_value = ""
 		while not self._stopping:
+			lock = threading.RLock()    
+			lock.acquire()
+			recent_value = self._msg.value()
 			tmp_value = pyperclip.paste()
+			lock.release()	
 			if tmp_value != recent_value:
-				recent_value = tmp_value
+				recent_value = tmp_value	
 				self.broadcast(recent_value)
 			time.sleep(self._pause)
+			
 
 	def stop(self):
 		print "stopping watcher"
@@ -36,11 +51,12 @@ class ClippyWatcher(threading.Thread):
 
 
 class ClippyReceiver(threading.Thread):
-	def __init__(self):
+	def __init__(self,msg):
 		super(ClippyReceiver,self).__init__()
         	self._pause = 5
 		self._stopping = False
-
+		self._msg = msg
+	
 	def run(self): 
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -51,6 +67,10 @@ class ClippyReceiver(threading.Thread):
 		while not self._stopping:
   			msg = sock.recv(10240)		
 			print msg
+			lock = threading.RLock()
+			lock.acquire()
+			self._msg.change(msg)
+			lock.release()			
 			pyperclip.copy(msg)
 			time.sleep(self._pause)
 
@@ -64,8 +84,9 @@ class ClippyReceiver(threading.Thread):
 
 
 def main():
-	watcher = ClippyWatcher()
-	receiver = ClippyReceiver()	
+	msg = Msg("")
+	watcher = ClippyWatcher(msg)
+	receiver = ClippyReceiver(msg)	
 	watcher.daemon = True
 	receiver.daemon = True
 
