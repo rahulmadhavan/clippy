@@ -23,14 +23,16 @@ public class ClippySender extends Thread {
 	private Message message;
 	private int port;
 	private String address;
+	public Condition condition;
 	
-	public ClippySender(WifiManager _wifi,ClipboardManager _clipboard,Message _message){
+	public ClippySender(WifiManager _wifi,ClipboardManager _clipboard,Message _message, Condition _condition){
 		super();
 		this.wifi = _wifi;
 		this.clipboard = _clipboard;
 		this.message = _message;
 		this.port = MulticastConfiguration.getPort();
 		this.address = MulticastConfiguration.getIp();
+		this.condition = _condition;
 		
 	}
 	
@@ -52,7 +54,7 @@ public class ClippySender extends Thread {
 	    
 	        Log.e("ClippySender", "Listening");
 	        
-	        while(true){
+	        while(condition.isActive()){
 				
 				if (clipboard.hasPrimaryClip()) {
 				    if (clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {

@@ -21,14 +21,16 @@ public class ClippyReceiver extends Thread {
 	private Message message;
 	private int port;
 	private String address;
+	public Condition condition;
 	
-	public ClippyReceiver(WifiManager _wifi,ClipboardManager _clipboard, Message _message){
+	public ClippyReceiver(WifiManager _wifi,ClipboardManager _clipboard, Message _message, Condition _condition){
 		super();
 		this.wifi = _wifi;
 		this.clipboard = _clipboard;
 		this.message = _message;
 		this.port = MulticastConfiguration.getPort();
 		this.address = MulticastConfiguration.getIp();
+		this.condition = _condition;
 		
 	}
 	
@@ -47,7 +49,7 @@ public class ClippyReceiver extends Thread {
                 String newData = null;
                 int comparator = 1;
                 
-                while (true) {
+                while (condition.isActive()) {
                     try {
                     	byte[] buffer = new byte[10000];
                         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, add, this.port);

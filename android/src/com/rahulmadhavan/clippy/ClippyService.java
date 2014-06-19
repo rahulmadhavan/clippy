@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.util.Log;
@@ -15,8 +16,9 @@ public class ClippyService extends Service{
 
 	WifiManager wifi;
 	ClipboardManager clipboard;
-	Thread clippyReceiverThread;
-	Thread clippySenderThread;
+	ClippyReceiver clippyReceiverThread;
+	ClippySender clippySenderThread;
+	Condition condition;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -26,9 +28,17 @@ public class ClippyService extends Service{
 
 	@Override
 	public void onCreate(){		
+					
 		Log.e("ClippyService", "Clippy Service Created");
 		
+		SharedPreferences settings = getSharedPreferences(MulticastConfiguration.CLIPPY_CONFIGURATION, 0);
+		MulticastConfiguration.initalizeConfiguration(settings);
+		
 		Message message = new Message("");
+		
+		if(condition == null){
+			condition = new Condition();
+		}
 
 		if(null == this.wifi){				
 			this.wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);			
@@ -38,13 +48,15 @@ public class ClippyService extends Service{
 		}
 		
 		if(null == clippyReceiverThread){						
-			clippyReceiverThread = new ClippyReceiver(wifi,clipboard,message);		                        		
+			clippyReceiverThread = new ClippyReceiver(wifi,clipboard,message,condition);
+			clippyReceiverThread.setDaemon(true);			
 			clippyReceiverThread.start();
 						
 		}
 
 		if(null == clippySenderThread){							
-			clippySenderThread = new ClippySender(wifi,clipboard,message);		                        		
+			clippySenderThread = new ClippySender(wifi,clipboard,message,condition);
+			clippySenderThread.setDaemon(true);
 			clippySenderThread.start();
 						
 		}
@@ -63,8 +75,18 @@ public class ClippyService extends Service{
 	@Override
 	public void onDestroy(){
 		Log.e("ClippyService", "ClippyReceiver Service Destroyed");
-		clippySenderThread = null;
-		clippyReceiverThread = null;
+		if(clippySenderThread != null){
+			Log.e("ClippyService", "clippySenderThread Service Destroyed");
+			clippySenderThread.condition.setActive(false);
+			clippySenderThread = null;
+		}
+		if(clippyReceiverThread != null){
+			Log.e("ClippyService", "clippyReceiverThread Service Destroyed");
+			clippyReceiverThread.condition.setActive(false);
+			clippyReceiverThread = null;
+		}
+		
+		
 		
 	}
 

@@ -2,7 +2,10 @@
 <resources>
 
     <string name="app_name">Clippy</string>
-    <string name="edit_message">9292</string>
+    <string name="label_port_no">Port No : </string>
+    <string name="label_current_port_no">Current Port No : </string>
+    <string name="label_current_port_no_value">         Loading.... </string>
+    <string name="edit_message_port_no"> Enter Port No</string>
     <string name="button_restart">Restart</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>

@@ -3,10 +3,15 @@ import threading
 import socket
 import pyperclip
 import struct
-
+import sys
 
 MCAST_GRP = '224.1.1.1'
-MCAST_PORT = 9292
+if len(sys.argv) > 1:
+	MCAST_PORT = int(sys.argv[1])
+else:
+	MCAST_PORT = 9292
+
+print "USING PORT : " + str(MCAST_PORT)  
 
 class Msg():
 	def __init__(self,msg):
@@ -89,7 +94,6 @@ def main():
 	receiver = ClippyReceiver(msg)	
 	watcher.daemon = True
 	receiver.daemon = True
-
 	watcher.start()
 	receiver.start()
 
