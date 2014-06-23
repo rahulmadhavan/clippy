@@ -20,4 +20,7 @@ To sync your clipboard contents to all your devices which are in the same networ
     
 
 ##For Android
+    * [download it from play store] (https://play.google.com/store/apps/details?id=com.rahulmadhavan.clippy) OR
     * Build the project under `/android` and deploy it on your device
+                  
+                                
