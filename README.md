@@ -18,9 +18,9 @@ To sync your clipboard contents to all your devices which are in the same networ
     * deafult port is 9292
     * to start at any other port X call : `python python/clippy.py X`
     
-
 ##For Android
-    * [download it from play store] (https://play.google.com/store/apps/details?id=com.rahulmadhavan.clippy) OR
-    * Build the project under `/android` and deploy it on your device
+
+   * [Download it from play store](https://play.google.com/store/apps/details?id=com.rahulmadhavan.clippy)   OR
+   * Build the project under `/android` and deploy it on your device
                   
                                 
