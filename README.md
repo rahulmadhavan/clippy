@@ -5,6 +5,10 @@ To sync the clipboard contents of your devices which are in the same network
 
 ##For all Desktop OS
 
+* ### Download 
+    
+    * [releases](https://github.com/rahulmadhavan/clippy/releases) 
+
 * ### Prerequisites
 
     * python >= 2.6
