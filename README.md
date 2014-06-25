@@ -1,7 +1,7 @@
 clippy
 ======
 
-To sync your clipboard contents to all your devices which are in the same network
+To sync the clipboard contents of your devices which are in the same network
 
 ##For all Desktop OS
 
