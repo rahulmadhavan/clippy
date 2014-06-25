@@ -8,6 +8,16 @@ To sync the clipboard contents of your devices which are in the same network
 * ### Download 
     
     * [releases](https://github.com/rahulmadhavan/clippy/releases) 
+    
+
+##For Android
+
+   * [Download it from play store](https://play.google.com/store/apps/details?id=com.rahulmadhavan.clippy)   OR
+   * Build the project under `/android` and deploy it on your device
+                  
+                                
+
+##For running as a script
 
 * ### Prerequisites
 
@@ -21,10 +31,5 @@ To sync the clipboard contents of your devices which are in the same network
     * copy some text on one machine and use paste on other machines
     * deafult port is 9292
     * to start at any other port X call : `python python/clippy.py X`
-    
-##For Android
 
-   * [Download it from play store](https://play.google.com/store/apps/details?id=com.rahulmadhavan.clippy)   OR
-   * Build the project under `/android` and deploy it on your device
-                  
-                                
+
